@@ -7,8 +7,8 @@ import { notFound, errorHandler } from "./middleware/error.middleware.js";
 const app = express()
 
 app.use(cors())
-app.use(express.json())
 app.use(requestLogger)
+app.use(express.json())
 app.get('/api/health', (_req: Request, res: Response): void=>{
     res.json({status: 'ok', uptime: process.uptime()})
 })
