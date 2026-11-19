@@ -26,6 +26,6 @@ const logger = pino({
         err: serializeError
     },
     transport:
-    process.env.nodeEnv === 'development' ? {target: 'pino-pretty'}:undefined,
+    process.env.NODE_ENV === 'development' ? {target: 'pino-pretty'}:undefined,
 })
 export default logger
