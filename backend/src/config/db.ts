@@ -16,11 +16,21 @@ pool.on('error',(err: Error)=>{
 })
 
 export const connectDb = async (): Promise<void> => {
+    try{
     const client = await pool.connect()
     client.release()
     logger.info('Database connected')
+    } catch (err){
+        logger.error({err}, 'Failed to connect to DB')
+        throw err
+    }
 }
 
 export const closeDb = async (): Promise<void> => {
+    try{
     await pool.end()
+    } catch (err){
+        logger.error({err},'Failed to close the DB pool')
+        throw err
+    }
 }

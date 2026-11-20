@@ -3,6 +3,16 @@ import ApiError from "../utils/ApiError.js";
 import { loginUser, signUpUser } from "../services/auth.service.js";
 import { findById } from "../repositories/user.respository.js";
 
+interface SignUpBody{
+    name?: unknown;
+    email?:unknown;
+    password?:unknown;
+}
+interface LoginBody{
+    email?:unknown;
+    password?:unknown
+}
+
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const minPassLength = 8
 
@@ -10,7 +20,7 @@ const trimString = (value: unknown): string =>
     typeof value === 'string' ? value.trim() : ""
 
 export const signup = async(
-    req:Request,
+    req:Request<Record<string, string> , unknown, SignUpBody>,
     res: Response,
     next: NextFunction
 ): Promise<void> =>{
@@ -38,7 +48,7 @@ export const signup = async(
     }
 }
 export const login = async (
-    req: Request,
+    req: Request<Record<string, string>, unknown, LoginBody>,
     res: Response,
     next: NextFunction
 ):Promise<void> =>{
@@ -65,6 +75,7 @@ export const getMe = async (req:Request, res:Response, next: NextFunction):Promi
         if(!user){
             throw new ApiError(404, 'User not found')
         } 
+        res.set('Cache-Control', 'no-store')
         res.json({id: user.id, name: user.name, email: user.email})
     } catch(error){
         next(error)
