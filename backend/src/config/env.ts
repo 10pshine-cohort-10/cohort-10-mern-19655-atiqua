@@ -27,6 +27,16 @@ interface Env {
   db: DbEnv;
   jwt: JwtEnv
 }
+const JWT_Expires_PATTERN = /^\d+(ms|s|m|h|d|w|y)$/;
+const readJwtExpiresIn = (): string => {
+  const val = process.env.JWT_EXPIRES_IN || '1d'
+  if(!JWT_Expires_PATTERN.test(val)){
+    throw new Error(
+      `Invalid JWT_EXPIRES_IN "${val}". Use a number with a unit, like 30m, 12h or 1d`
+    )
+  }
+  return val
+}
 export const env: Env = {
   port: Number(process.env.PORT) || 5000,
   nodeEnv: process.env.NODE_ENV || "development",
@@ -40,6 +50,6 @@ export const env: Env = {
   },
   jwt: {
     secret: requireEnv('JWT_SECRET'),
-    expiresIn: process.env.JWT_EXPIRES_IN || '1d'
+    expiresIn: readJwtExpiresIn()
   }  
 };
