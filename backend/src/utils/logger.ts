@@ -17,6 +17,13 @@ const serializeError = (error: Error)=>{
             message: "Payload too large"
         }
     }
+    if(candidate.type === "charset.unsupported" || candidate.type === "encoding.unsupported"){
+        return {
+            type: candidate.type,
+            status: 415,
+            message: "Unsuported content type or encoding"
+        }
+    }
     return pino.stdSerializers.err(error)
 }
 const logger = pino({
